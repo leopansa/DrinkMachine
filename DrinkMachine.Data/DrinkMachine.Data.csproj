@@ -43,18 +43,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\BeverageMachine.cs" />
-    <Compile Include="Models\CoinMachine.cs" />
     <Compile Include="Models\CoinType.cs" />
-    <Compile Include="Models\Coin.cs" />
-    <Compile Include="Models\Beverage.cs" />
+    <Compile Include="Models\CoinMachine.cs" />
     <Compile Include="Models\BeverageType.cs" />
     <Compile Include="Models\Machine.cs" />
-    <Compile Include="Services\IBeverageData.cs" />
-    <Compile Include="Services\ICoinData.cs" />
+    <Compile Include="Services\IBeverageMachineData.cs" />
+    <Compile Include="Services\ICoinMachineData.cs" />
     <Compile Include="Services\IMachineData.cs" />
     <Compile Include="Services\InMemoryBeverage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\InMemoryCoin.cs" />
+    <Compile Include="Services\InMemoryCoinMachine.cs" />
     <Compile Include="Services\InMemoryMachine.cs" />
   </ItemGroup>
   <ItemGroup />

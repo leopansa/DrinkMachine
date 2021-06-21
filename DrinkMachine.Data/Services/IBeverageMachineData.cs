@@ -7,10 +7,10 @@ using DrinkMachine.Data.Models;
 
 namespace DrinkMachine.Data.Services
 {
-    public interface IBeverageData
+    public interface IBeverageMachineData
     {
-        IEnumerable<Beverage> GetAll();
-        Beverage Get(int id);
+        IEnumerable<BeverageMachine> GetAll();
+        BeverageMachine Get(int id);
         
         int GetId(BeverageType tBeverage);
     }

@@ -8,34 +8,34 @@ using DrinkMachine.Data.Services;
 
 namespace DrinkMachine.Data
 {
-    public class InMemoryBeverage : IBeverageData
+    public class InMemoryBeverage : IBeverageMachineData
     {
-        List<Beverage> Beverages;
+        List<BeverageMachine> Beverages;
         
         public InMemoryBeverage()
         {
-            Beverages = new List<Beverage>()
+            Beverages = new List<BeverageMachine>()
             {
-                new Beverage{ Id=1, Name = BeverageType.Coke, Price = 25},
-                new Beverage{ Id=2, Name = BeverageType.Pepsi, Price = 36},
-                new Beverage{ Id=3, Name = BeverageType.Soda, Price = 45}
+                new BeverageMachine{ Id=1, Name = BeverageType.Coke, Price = 25, Amount = 0},
+                new BeverageMachine{ Id=2, Name = BeverageType.Pepsi, Price = 36, Amount = 0},
+                new BeverageMachine{ Id=3, Name = BeverageType.Soda, Price = 45, Amount = 0}
             };
 
         }
 
-        public IEnumerable<Beverage> GetAll()
+        public IEnumerable<BeverageMachine> GetAll()
         {
             return Beverages;
         }
 
-        public Beverage Get(int id)
+        public BeverageMachine Get(int id)
         {
             return Beverages.FirstOrDefault(b => b.Id == id);
         }
 
         public int GetId(BeverageType tBeverage)
         {
-            Beverage beverageFound = Beverages.FirstOrDefault(b => b.Name == tBeverage);
+            BeverageMachine beverageFound = Beverages.FirstOrDefault(b => b.Name == tBeverage);
             if (beverageFound != null)
             {
                 return beverageFound.Id;
@@ -49,7 +49,7 @@ namespace DrinkMachine.Data
 
         public decimal GetPrice(BeverageType tBeverage)
         {
-            Beverage beverageFound = Beverages.FirstOrDefault(b => b.Name == tBeverage);
+            BeverageMachine beverageFound = Beverages.FirstOrDefault(b => b.Name == tBeverage);
             if (beverageFound != null)
             {
                 return beverageFound.Price;

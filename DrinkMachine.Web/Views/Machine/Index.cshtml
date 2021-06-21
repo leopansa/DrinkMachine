@@ -1,4 +1,5 @@
-﻿@model DrinkMachine.Data.Models.Machine
+﻿@using System.Web.Optimization
+@model DrinkMachine.Web.Models.OrderViewModel
 
 @{
     ViewBag.Title = "Home";
@@ -6,30 +7,138 @@
 
 <h2>Home</h2>
 
-<h3>Coin Information</h3>
-<div class="row">
+<div class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
-    @for (var i = 0; i < Model.Coins.Count(); i++)
-    {
-        <div class="col-md-3 form-group">
-            @Html.DisplayFor(m => m.Coins[i].Name)
-            @Html.TextBoxFor(m => m.Coins[i].Quantity, new {@class= "form-control", placeholder = "0" })
 
-        </div>
-    }
+<div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3>Caution! This work in incomplete.</h3>
+    <p>Test only with <strong>one kind of drink</strong> and the payment <strong>only with cents</strong></p>
+    Sorry :(
 </div>
 
-<h3>Product Information</h3>
+<h3>Coin Information</h3>
 
+@using (Html.BeginForm("GetDrinks", "Machine"))
+{
+    @Html.AntiForgeryToken()
 
-         @for (var i = 0; i < Model.Beverage.Count(); i++) { 
-             <div class="row">
-                 <div class="col-md-6">
-            @Html.DisplayFor(m => m.Beverage[i].Name)<br />
-            @Html.DisplayFor(m => m.Beverage[i].Quantity) drinks available, Cost = @Html.DisplayFor(m => m.Beverage[i].Price)<br />
-                 </div>
-        </div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="row">
+
+    @for (var i = 0; i < Model.Coins.Count; i++)
+    {
+    <div class="col-md-3 form-group">
+        @Html.HiddenFor(m => m.Coins[i].Id)
+        @Html.HiddenFor(m => m.Coins[i].Name)
+        @Html.DisplayFor(m => m.Coins[i].Name)
+        @Html.TextBoxFor(m => m.Coins[i].Amount, new { @class = "form-control", placeholder = "0", id = Model.Coins[i].Name, type = "number", min = 0, max = Model.CoinsMachine[i].Amount })
+        @Html.ValidationMessageFor(m => m.Coins[i].Amount, "", new { @class = "text-danger" })
+    </div>
+        @Html.HiddenFor(m => m.CoinsMachine[i].Id)
+        @Html.HiddenFor(m => m.CoinsMachine[i].Name)
+        @Html.HiddenFor(m => m.CoinsMachine[i].Amount)
     }
+</div>
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Product Information</h3>
+
+            @for (var i = 0; i < Model.Beverages.Count(); i++)
+            {
+                <div class="row">
+                    <div class="col-md-8">
+                        @Html.HiddenFor(m => m.Beverages[i].Id)
+                        @Html.HiddenFor(m => m.Beverages[i].Name)
+                        <h4> @Html.DisplayFor(m => m.Beverages[i].Name, new { @class = "col-sm-10" })</h4>
+                        @Html.DisplayTextFor(m => m.BeveragesMachine[i].Amount)<span> drinks available, Cost = </span>@Html.DisplayFor(m => m.BeveragesMachine[i].Price)
+                    </div>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(m => m.Beverages[i].Amount, new { @class = "form-control", placeholder = "0", id = Model.Beverages[i].Name })
+                        @Html.HiddenFor(m => m.Beverages[i].Price)
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.BeveragesMachine[i].Id)
+                @Html.HiddenFor(m => m.BeveragesMachine[i].Name)
+                @Html.HiddenFor(m => m.BeveragesMachine[i].Amount)
+                @Html.HiddenFor(m => m.BeveragesMachine[i].Price)
+            }
+        </div>
+
+
+        <div class="col-md-3">
+            <h3>Total</h3>
+            @Html.TextBoxFor(m => m.Total, new { @class = "form-control", placeholder = "0.00", id="orderTotal", @readonly = "readonly" })
+        </div>
+    </div>
     
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <input type="submit" value="Get Drinks" class="btn btn-primary" id="principal" />
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $("#principal").prop('disabled', true);
+        $("#Coke, #Pepsi, #Soda").change(function(e) {
+            console.dir(e.currentTarget);
+            var idSelected = e.currentTarget.id;
+            var dataB = {};
+            dataB.name = e.currentTarget.id;
+            dataB.amount = e.currentTarget.value;
+            console.log(JSON.stringify(dataB));
+            $.ajax({
+                type: "POST",
+                url: "/Machine/GetValueDrink",
+                data: JSON.stringify(dataB),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function(data) {
+                    if (data === 0.00) {
+                        $("#orderTotal").val(0);
+                        $("#principal").prop('disabled', true);
+                    } else {
+                        $("#orderTotal").val(data);
+                        $("#principal").prop('disabled', false);
+                    }
+                },
+                error: function() {
+                    alert("Error occured!!");
+                }
+            });
+        });
+
+
+    </script>
+}
+
+
+
+
+
+
+
 
 

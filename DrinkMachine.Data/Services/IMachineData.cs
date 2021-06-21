@@ -10,5 +10,9 @@ namespace DrinkMachine.Data.Services
     public interface IMachineData
     {
         Machine GetMachine();
+
+        void RemoveBeverage(string beverageName, int amountBeverages);
+
+        void Payment(List<CoinMachine> paymentCoins);
     }
 }

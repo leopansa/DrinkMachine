@@ -21,8 +21,8 @@ namespace DrinkMachine.Web.App_Start
             //MvcApplication is define in the class of Global.asax from the start point of the Application
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
-            builder.RegisterType<InMemoryCoin>().As<ICoinData>().SingleInstance();
-            builder.RegisterType<InMemoryBeverage>().As<IBeverageData>().SingleInstance();
+            builder.RegisterType<InMemoryCoinMachine>().As<ICoinMachineData>().SingleInstance();
+            builder.RegisterType<InMemoryBeverage>().As<IBeverageMachineData>().SingleInstance();
             builder.RegisterType<InMemoryMachine>().As<IMachineData>().SingleInstance();
             //.SingleInstance(); //this will never be use in real application because it would be only an one instance from all the users of the data.
             

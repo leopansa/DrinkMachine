@@ -7,12 +7,12 @@ using DrinkMachine.Data.Models;
 
 namespace DrinkMachine.Data.Services
 {
-    public interface ICoinData
+    public interface ICoinMachineData
     {
-        IEnumerable<Coin> GetAll();
+        IEnumerable<CoinMachine> GetAll();
 
-        Coin Get(int id);
+        CoinMachine Get(int id);
 
-        int GetId(CoinType name);
+        int GetId(string name);
     }
 }
